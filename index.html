@@ -16,7 +16,7 @@
             <!-- Player 1 -->
             <div class="video-player">
                 <h2>Live Stream 1</h2>
-                <video id="stream1" class="video-js vjs-default-skin" controls preload="auto" width="640" height="360" autoplay muted>
+                <video id="stream1" class="video-js vjs-default-skin" controls preload="auto" muted playsinline>
                     <source src="https://cdn.live.br1.jmvstream.com/w/LVW-10801/LVW10801_Xvg4R0u57n/chunklist.m3u8" type="application/x-mpegURL">
                     Seu navegador não suporta a tag de vídeo.
                 </video>
@@ -25,7 +25,7 @@
             <!-- Player 2 -->
             <div class="video-player">
                 <h2>Live Stream 2</h2>
-                <video id="stream2" class="video-js vjs-default-skin" controls preload="auto" width="640" height="360" autoplay muted>
+                <video id="stream2" class="video-js vjs-default-skin" controls preload="auto" muted playsinline>
                     <source src="https://amazonsat.brasilstream.com.br/hls/amazonsat/index.m3u8" type="application/x-mpegURL">
                     Seu navegador não suporta a tag de vídeo.
                 </video>
@@ -34,7 +34,7 @@
             <!-- Player 3 -->
             <div class="video-player">
                 <h2>Live Stream 3</h2>
-                <video id="stream3" class="video-js vjs-default-skin" controls preload="auto" width="640" height="360" autoplay muted>
+                <video id="stream3" class="video-js vjs-default-skin" controls preload="auto" muted playsinline>
                     <source src="https://8hzcavccys.zoeweb.tv/redeminas/ngrp:redeminas_all/chunklist_b2179072.m3u8" type="application/x-mpegURL">
                     Seu navegador não suporta a tag de vídeo.
                 </video>
@@ -43,7 +43,7 @@
             <!-- Player 4 -->
             <div class="video-player">
                 <h2>Live Stream 4</h2>
-                <video id="stream4" class="video-js vjs-default-skin" controls preload="auto" width="640" height="360" autoplay muted>
+                <video id="stream4" class="video-js vjs-default-skin" controls preload="auto" muted playsinline>
                     <source src="https://video08.logicahost.com.br/istvnacional/srt.stream/chunklist_w745016844.m3u8" type="application/x-mpegURL">
                     Seu navegador não suporta a tag de vídeo.
                 </video>
@@ -53,24 +53,26 @@
 
     <!-- Video.js Script -->
     <script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
+
     <!-- Inicialização dos Players -->
     <script>
-        // Inicializa os players
-        var player1 = videojs('stream1');
-        var player2 = videojs('stream2');
-        var player3 = videojs('stream3');
-        var player4 = videojs('stream4');
-    </script>
-    <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const videos = document.querySelectorAll("video"); // Seleciona todos os vídeos na página
-    videos.forEach(video => {
-        video.muted = true; // Garante que o vídeo estará mudo
-        video.autoplay = true; // Habilita autoplay
-        video.play().catch(error => console.error("Erro ao iniciar o vídeo:", error));
+    document.addEventListener("DOMContentLoaded", function () {
+        const playerIds = ["stream1", "stream2", "stream3", "stream4"];
+
+        playerIds.forEach(id => {
+            var player = videojs(id, {
+                autoplay: true, // Ativa autoplay
+                muted: true, // Mantém o vídeo sem som
+                playsinline: true // Impede tela cheia automática no iOS
+            });
+
+            // Garante que o player tente iniciar a reprodução automaticamente
+            player.ready(function () {
+                player.play().catch(error => console.error(`Erro ao iniciar ${id}:`, error));
+            });
+        });
     });
-});
-</script>
+    </script>
 
 </body>
 </html>
