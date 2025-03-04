@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Streams</title>
+    <!-- Video.js CSS -->
+    <link href="https://vjs.zencdn.net/7.20.3/video-js.css" rel="stylesheet">
+    <!-- Estilo personalizado -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Live Streams</h1>
+        <div class="video-grid">
+            <!-- Player 1 -->
+            <div class="video-player">
+                <h2>Live Stream 1</h2>
+                <video id="stream1" class="video-js vjs-default-skin" controls preload="auto" width="640" height="360" autoplay muted>
+                    <source src="https://cdn.live.br1.jmvstream.com/w/LVW-10801/LVW10801_Xvg4R0u57n/chunklist.m3u8" type="application/x-mpegURL">
+                    Seu navegador não suporta a tag de vídeo.
+                </video>
+            </div>
+
+            <!-- Player 2 -->
+            <div class="video-player">
+                <h2>Live Stream 2</h2>
+                <video id="stream2" class="video-js vjs-default-skin" controls preload="auto" width="640" height="360" autoplay muted>
+                    <source src="https://amazonsat.brasilstream.com.br/hls/amazonsat/index.m3u8" type="application/x-mpegURL">
+                    Seu navegador não suporta a tag de vídeo.
+                </video>
+            </div>
+
+            <!-- Player 3 -->
+            <div class="video-player">
+                <h2>Live Stream 3</h2>
+                <video id="stream3" class="video-js vjs-default-skin" controls preload="auto" width="640" height="360" autoplay muted>
+                    <source src="https://8hzcavccys.zoeweb.tv/redeminas/ngrp:redeminas_all/chunklist_b2179072.m3u8" type="application/x-mpegURL">
+                    Seu navegador não suporta a tag de vídeo.
+                </video>
+            </div>
+
+            <!-- Player 4 -->
+            <div class="video-player">
+                <h2>Live Stream 4</h2>
+                <video id="stream4" class="video-js vjs-default-skin" controls preload="auto" width="640" height="360" autoplay muted>
+                    <source src="https://video08.logicahost.com.br/istvnacional/srt.stream/chunklist_w745016844.m3u8" type="application/x-mpegURL">
+                    Seu navegador não suporta a tag de vídeo.
+                </video>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video.js Script -->
+    <script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
+    <!-- Inicialização dos Players -->
+    <script>
+        // Inicializa os players
+        var player1 = videojs('stream1');
+        var player2 = videojs('stream2');
+        var player3 = videojs('stream3');
+        var player4 = videojs('stream4');
+    </script>
+</body>
+</html>
