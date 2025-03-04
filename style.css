@@ -3,12 +3,12 @@ body {
     margin: 0;
     padding: 0;
     color: #fff;
-    overflow: hidden; /* Evita barras de rolagem */
+    overflow: auto; /* Permite a rolagem da página */
 }
 
 /* Estilo do vídeo de fundo */
 #background-video {
-    position: fixed;
+    position: fixed; /* Mantém o vídeo fixo */
     top: 0;
     left: 0;
     width: 100%;
@@ -26,6 +26,7 @@ body {
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     position: relative; /* Garante que o conteúdo fique acima do vídeo */
+    z-index: 1; /* Coloca o conteúdo acima do vídeo de fundo */
 }
 
 h1 {
