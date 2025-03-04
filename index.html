@@ -61,5 +61,16 @@
         var player3 = videojs('stream3');
         var player4 = videojs('stream4');
     </script>
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const videos = document.querySelectorAll("video"); // Seleciona todos os vídeos na página
+    videos.forEach(video => {
+        video.muted = true; // Garante que o vídeo estará mudo
+        video.autoplay = true; // Habilita autoplay
+        video.play().catch(error => console.error("Erro ao iniciar o vídeo:", error));
+    });
+});
+</script>
+
 </body>
 </html>
