@@ -1,34 +1,45 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TV Zebra</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TV Golfinho</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header>
-    <h1>TV Zebra</h1>
-    <img src="placeholder-logo.png" alt="Logo TV Zebra" class="logo">
-  </header>
-
-  <main>
-    <section class="player">
-      <video id="videoPlayer" controls autoplay></video>
-    </section>
-
-    <section class="channel-grid">
-      <h2>Canais</h2>
-      <div class="categories">
-        <!-- Categorias e canais serão carregados aqui via JavaScript -->
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <p>&copy; 2023 TV Zebra. Todos os direitos reservados.</p>
-  </footer>
-
-  <script src="script.js"></script>
+    <div class="container">
+        <nav class="sidebar">
+            <div class="logo">
+                <img src="assets/images/logo.svg" alt="TV Golfinho">
+            </div>
+            <ul class="channels-list">
+                <li data-channel="https://cdn.live.br1.jmvstream.com/w/LVW-10801/LVW10801_Xvg4R0u57n/chunklist.m3u8">Canal 1</li>
+                <li data-channel="https://amazonsat.brasilstream.com.br/hls/amazonsat/index.m3u8">Canal 2</li>
+                <li data-channel="https://8hzcavccys.zoeweb.tv/redeminas/ngrp:redeminas_all/chunklist_b2179072.m3u8">Canal 3</li>
+                <li data-channel="https://video08.logicahost.com.br/istvnacional/srt.stream/chunklist_w745016844.m3u8">Canal 4</li>
+            </ul>
+        </nav>
+        <main class="main-content">
+            <div class="video-container">
+                <video id="videoPlayer" controls></video>
+            </div>
+            <div class="channel-thumbnails">
+                <div class="thumbnail" data-channel="https://cdn.live.br1.jmvstream.com/w/LVW-10801/LVW10801_Xvg4R0u57n/chunklist.m3u8">
+                    <img src="assets/images/channel1-thumb.jpg" alt="Canal 1">
+                </div>
+                <div class="thumbnail" data-channel="https://amazonsat.brasilstream.com.br/hls/amazonsat/index.m3u8">
+                    <img src="assets/images/channel2-thumb.jpg" alt="Canal 2">
+                </div>
+                <div class="thumbnail" data-channel="https://8hzcavccys.zoeweb.tv/redeminas/ngrp:redeminas_all/chunklist_b2179072.m3u8">
+                    <img src="assets/images/channel3-thumb.jpg" alt="Canal 3">
+                </div>
+                <div class="thumbnail" data-channel="https://video08.logicahost.com.br/istvnacional/srt.stream/chunklist_w745016844.m3u8">
+                    <img src="assets/images/channel4-thumb.jpg" alt="Canal 4">
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="script.js"></script>
 </body>
 </html>
