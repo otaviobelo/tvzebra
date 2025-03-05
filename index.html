@@ -1,78 +1,34 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Streams</title>
-    <!-- Video.js CSS -->
-    <link href="https://vjs.zencdn.net/7.20.3/video-js.css" rel="stylesheet">
-    <!-- Estilo personalizado -->
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TV Zebra</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Live Streams</h1>
-        <div class="video-grid">
-            <!-- Player 1 -->
-            <div class="video-player">
-                <h2>Live Stream 1</h2>
-                <video id="stream1" class="video-js vjs-default-skin" controls preload="auto" muted playsinline>
-                    <source src="https://cdn.live.br1.jmvstream.com/w/LVW-10801/LVW10801_Xvg4R0u57n/chunklist.m3u8" type="application/x-mpegURL">
-                    Seu navegador não suporta a tag de vídeo.
-                </video>
-            </div>
+  <header>
+    <h1>TV Zebra</h1>
+    <img src="placeholder-logo.png" alt="Logo TV Zebra" class="logo">
+  </header>
 
-            <!-- Player 2 -->
-            <div class="video-player">
-                <h2>Live Stream 2</h2>
-                <video id="stream2" class="video-js vjs-default-skin" controls preload="auto" muted playsinline>
-                    <source src="https://amazonsat.brasilstream.com.br/hls/amazonsat/index.m3u8" type="application/x-mpegURL">
-                    Seu navegador não suporta a tag de vídeo.
-                </video>
-            </div>
+  <main>
+    <section class="player">
+      <video id="videoPlayer" controls autoplay></video>
+    </section>
 
-            <!-- Player 3 -->
-            <div class="video-player">
-                <h2>Live Stream 3</h2>
-                <video id="stream3" class="video-js vjs-default-skin" controls preload="auto" muted playsinline>
-                    <source src="https://8hzcavccys.zoeweb.tv/redeminas/ngrp:redeminas_all/chunklist_b2179072.m3u8" type="application/x-mpegURL">
-                    Seu navegador não suporta a tag de vídeo.
-                </video>
-            </div>
+    <section class="channel-grid">
+      <h2>Canais</h2>
+      <div class="categories">
+        <!-- Categorias e canais serão carregados aqui via JavaScript -->
+      </div>
+    </section>
+  </main>
 
-            <!-- Player 4 -->
-            <div class="video-player">
-                <h2>Live Stream 4</h2>
-                <video id="stream4" class="video-js vjs-default-skin" controls preload="auto" muted playsinline>
-                    <source src="https://video08.logicahost.com.br/istvnacional/srt.stream/chunklist_w745016844.m3u8" type="application/x-mpegURL">
-                    Seu navegador não suporta a tag de vídeo.
-                </video>
-            </div>
-        </div>
-    </div>
+  <footer>
+    <p>&copy; 2023 TV Zebra. Todos os direitos reservados.</p>
+  </footer>
 
-    <!-- Video.js Script -->
-    <script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
-
-    <!-- Inicialização dos Players -->
-    <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const playerIds = ["stream1", "stream2", "stream3", "stream4"];
-
-        playerIds.forEach(id => {
-            var player = videojs(id, {
-                autoplay: true, // Ativa autoplay
-                muted: true, // Mantém o vídeo sem som
-                playsinline: true // Impede tela cheia automática no iOS
-            });
-
-            // Garante que o player tente iniciar a reprodução automaticamente
-            player.ready(function () {
-                player.play().catch(error => console.error(`Erro ao iniciar ${id}:`, error));
-            });
-        });
-    });
-    </script>
-
+  <script src="script.js"></script>
 </body>
 </html>
