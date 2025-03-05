@@ -1,26 +1,51 @@
-const videoPlayer = document.getElementById('videoPlayer');
-const channels = [
-  { name: "Canal 1", url: "https://cdn.live.br1.jmvstream.com/w/LVW-10801/LVW10801_Xvg4R0u57n/chunklist.m3u8", category: "Geral" },
-  { name: "Canal 2", url: "https://amazonsat.brasilstream.com.br/hls/amazonsat/index.m3u8", category: "Notícias" },
-  { name: "Canal 3", url: "https://8hzcavccys.zoeweb.tv/redeminas/ngrp:redeminas_all/chunklist_b2179072.m3u8", category: "Variedades" },
-  { name: "Canal 4", url: "https://video08.logicahost.com.br/istvnacional/srt.stream/chunklist_w745016844.m3u8", category: "Geral" }
-];
+document.addEventListener('DOMContentLoaded', function() {
+    const videoPlayer = document.getElementById('videoPlayer');
+    const channelList = document.querySelectorAll('.channels-list li');
+    const thumbnails = document.querySelectorAll('.thumbnail');
 
-// Carregar o primeiro canal ao iniciar
-videoPlayer.src = channels[0].url;
+    let hls = new Hls();
 
-// Função para carregar a grade de canais
-function loadChannels() {
-  const categoriesContainer = document.querySelector('.categories');
-  channels.forEach(channel => {
-    const channelElement = document.createElement('div');
-    channelElement.className = 'channel';
-    channelElement.innerHTML = `<p>${channel.name}</p>`;
-    channelElement.addEventListener('click', () => {
-      videoPlayer.src = channel.url;
+    function loadChannel(url) {
+        if (Hls.isSupported()) {
+            hls.loadSource(url);
+            hls.attachMedia(videoPlayer);
+            hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                videoPlayer.play();
+            });
+        } else if (videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
+            videoPlayer.src = url;
+            videoPlayer.addEventListener('loadedmetadata', function() {
+                videoPlayer.play();
+            });
+        }
+    }
+
+    function setActiveChannel(channel) {
+        channelList.forEach(ch => ch.classList.remove('active'));
+        channel.classList.add('active');
+    }
+
+    channelList.forEach(channel => {
+        channel.addEventListener('click', function() {
+            const url = this.getAttribute('data-channel');
+            loadChannel(url);
+            setActiveChannel(this);
+            localStorage.setItem('lastChannel', url);
+        });
     });
-    categoriesContainer.appendChild(channelElement);
-  });
-}
 
-loadChannels();
+    thumbnails.forEach(thumbnail => {
+        thumbnail.addEventListener('click', function() {
+            const url = this.getAttribute('data-channel');
+            loadChannel(url);
+            localStorage.setItem('lastChannel', url);
+        });
+    });
+
+    const lastChannel = localStorage.getItem('lastChannel');
+    if (lastChannel) {
+        loadChannel(lastChannel);
+    } else {
+        loadChannel(channelList[0].getAttribute('data-channel'));
+    }
+});
