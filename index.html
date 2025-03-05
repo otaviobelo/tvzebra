@@ -3,43 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TV Golfinho</title>
+    <title>Golfinho TV ao Vivo</title>
     <link rel="stylesheet" href="styles.css">
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.4.12/hls.min.js"></script>
+    <script defer>
+        document.addEventListener("DOMContentLoaded", function() {
+            const videoPlayer = document.getElementById("video-player");
+            const channelName = document.getElementById("channel-name");
+            const channels = [
+                { name: "SBT Interior", src: "https://cdn.live.br1.jmvstream.com/w/LVW-10801/LVW10801_Xvg4R0u57n/chunklist.m3u8" },
+                { name: "Amazon Sat", src: "https://amazonsat.brasilstream.com.br/hls/amazonsat/index.m3u8" },
+                { name: "Rede Minas", src: "https://8hzcavccys.zoeweb.tv/redeminas/ngrp:redeminas_all/chunklist_b2179072.m3u8" },
+                { name: "ISTV", src: "https://video08.logicahost.com.br/istvnacional/srt.stream/chunklist_w745016844.m3u8" }
+            ];
+            let currentChannelIndex = 0;
+            let hls = new Hls();
+            let userUnmuted = false;
+            
+            function loadChannel(index) {
+                currentChannelIndex = index;
+                const channel = channels[currentChannelIndex];
+                channelName.textContent = channel.name;
+                
+                if (Hls.isSupported()) {
+                    hls.destroy();
+                    hls = new Hls();
+                    hls.loadSource(channel.src);
+                    hls.attachMedia(videoPlayer);
+                    videoPlayer.muted = !userUnmuted;
+                    videoPlayer.play();
+                } else if (videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
+                    videoPlayer.src = channel.src;
+                    videoPlayer.muted = !userUnmuted;
+                    videoPlayer.play();
+                }
+            }
+            
+            videoPlayer.addEventListener("volumechange", function() {
+                if (!videoPlayer.muted) {
+                    userUnmuted = true;
+                }
+            });
+            
+            document.querySelectorAll(".channel").forEach((channel, index) => {
+                channel.addEventListener("click", function() {
+                    loadChannel(index);
+                });
+            });
+            
+            document.querySelector(".nav-arrow.left").addEventListener("click", function() {
+                let newIndex = (currentChannelIndex - 1 + channels.length) % channels.length;
+                loadChannel(newIndex);
+            });
+            
+            document.querySelector(".nav-arrow.right").addEventListener("click", function() {
+                let newIndex = (currentChannelIndex + 1) % channels.length;
+                loadChannel(newIndex);
+            });
+            
+            loadChannel(0);
+        });
+    </script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #000000;
+            color: #FFFFFF;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #8E44AD;
+            padding: 15px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .player-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            margin: 40px auto;
+            max-width: 800px;
+        }
+
+        #channel-name {
+            margin-bottom: 15px;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            background: rgba(0, 0, 0, 0.5);
+            color: #FFFFFF;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .nav-arrow.left {
+            left: -50px;
+        }
+
+        .nav-arrow.right {
+            right: -50px;
+        }
+
+        video {
+            width: 100%;
+            border: 2px solid #8E44AD;
+            border-radius: 10px;
+        }
+
+        .channel-list {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .channel {
+            cursor: pointer;
+            text-align: center;
+            border: 2px solid #8E44AD;
+            padding: 10px;
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+
+        .channel:hover {
+            background-color: #8E44AD;
+        }
+
+        .channel img {
+            width: 120px;
+            height: 80px;
+            object-fit: contain;
+            border-radius: 5px;
+            display: block;
+            margin: 0 auto 5px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <nav class="sidebar">
-            <div class="logo">
-                <img src="assets/images/logo.svg" alt="TV Golfinho">
+    <header>
+        <div class="logo">Golfinho TV ao Vivo</div>
+    </header>
+    
+    <main>
+        <section class="player-container">
+            <h2 id="channel-name">SBT Interior</h2>
+            <button class="nav-arrow left">&#9664;</button>
+            <video id="video-player" controls autoplay muted></video>
+            <button class="nav-arrow right">&#9654;</button>
+        </section>
+
+        <section id="canais" class="channel-list">
+            <div class="channel" data-name="SBT Interior">
+                <img src="https://seeklogo.com/images/S/sbt-logo-3D30D31294-seeklogo.com.png" alt="SBT Interior">
+                <p>SBT Interior</p>
             </div>
-            <ul class="channels-list">
-                <li data-channel="https://cdn.live.br1.jmvstream.com/w/LVW-10801/LVW10801_Xvg4R0u57n/chunklist.m3u8">Canal 1</li>
-                <li data-channel="https://amazonsat.brasilstream.com.br/hls/amazonsat/index.m3u8">Canal 2</li>
-                <li data-channel="https://8hzcavccys.zoeweb.tv/redeminas/ngrp:redeminas_all/chunklist_b2179072.m3u8">Canal 3</li>
-                <li data-channel="https://video08.logicahost.com.br/istvnacional/srt.stream/chunklist_w745016844.m3u8">Canal 4</li>
-            </ul>
-        </nav>
-        <main class="main-content">
-            <div class="video-container">
-                <video id="videoPlayer" controls></video>
+            <div class="channel" data-name="Amazon Sat">
+                <img src="https://portalamazonia.com/wp-content/uploads/2022/05/b2ap3_large_atual-logo.jpg" alt="Amazon Sat">
+                <p>Amazon Sat</p>
             </div>
-            <div class="channel-thumbnails">
-                <div class="thumbnail" data-channel="https://cdn.live.br1.jmvstream.com/w/LVW-10801/LVW10801_Xvg4R0u57n/chunklist.m3u8">
-                    <img src="assets/images/channel1-thumb.jpg" alt="Canal 1">
-                </div>
-                <div class="thumbnail" data-channel="https://amazonsat.brasilstream.com.br/hls/amazonsat/index.m3u8">
-                    <img src="assets/images/channel2-thumb.jpg" alt="Canal 2">
-                </div>
-                <div class="thumbnail" data-channel="https://8hzcavccys.zoeweb.tv/redeminas/ngrp:redeminas_all/chunklist_b2179072.m3u8">
-                    <img src="assets/images/channel3-thumb.jpg" alt="Canal 3">
-                </div>
-                <div class="thumbnail" data-channel="https://video08.logicahost.com.br/istvnacional/srt.stream/chunklist_w745016844.m3u8">
-                    <img src="assets/images/channel4-thumb.jpg" alt="Canal 4">
-                </div>
+            <div class="channel" data-name="Rede Minas">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5hlUr3FxVTtyNxc9vf1Yl1yDON4mC0WlLZQ&s" alt="Rede Minas">
+                <p>Rede Minas</p>
             </div>
-        </main>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <script src="script.js"></script>
+            <div class="channel" data-name="ISTV">
+                <img src="https://www.istv.com.br/static/media/Logo_ISTV_01.0b00a8e55712712e3890.png" alt="ISTV">
+                <p>ISTV</p>
+            </div>
+        </section>
+    </main>
 </body>
 </html>
