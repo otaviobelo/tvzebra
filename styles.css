@@ -115,9 +115,9 @@ header {
     background-color: #000; /* Fundo preto */
 }
 
-.video-js {
+video {
     width: 100%;
-    height: 450px; /* Altura fixa para o player */
+    height: auto;
     background-color: #000; /* Fundo preto */
 }
 
@@ -146,12 +146,6 @@ header {
 
 .right-arrow {
     right: 10px;
-}
-
-/* Ajustes para o modo de tela cheia */
-.video-js.vjs-fullscreen .nav-arrow {
-    font-size: 40px; /* Aumenta o tamanho das setas no modo de tela cheia */
-    padding: 15px;
 }
 
 /* Footer Fixo */
