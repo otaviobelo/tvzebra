@@ -27,9 +27,8 @@
             <!-- Seta de navegação esquerda -->
             <div class="nav-arrow left-arrow" onclick="trocarCanal(-1)">&#10094;</div>
 
-            <!-- Player de Vídeo Nativo -->
+            <!-- Player de Vídeo -->
             <video id="videoPlayer" controls width="800" height="450" muted autoplay>
-                <source src="" type="application/x-mpegURL">
                 Seu navegador não suporta a tag de vídeo.
             </video>
 
@@ -50,6 +49,8 @@
         <p>&copy; 2023 TV ao Vivo. Todos os direitos reservados.</p>
     </footer>
 
+    <!-- Inclua a biblioteca hls.js -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script>
         // Carregar canais do arquivo JSON
         fetch('canais.json')
@@ -68,8 +69,9 @@
                 });
             });
 
-        // Lógica do player
+        // Lógica do player com suporte a HLS
         const player = document.getElementById('videoPlayer');
+        let hls; // Variável para instância do HLS
         let canalAtual = 0;
 
         function carregarCanal(index) {
@@ -78,8 +80,26 @@
             if (index >= canais.length) index = 0;
 
             const src = canais[index].getAttribute('data-src');
-            player.src = src;
-            player.play();
+
+            if (Hls.isSupported()) {
+                // Se o navegador suportar HLS, use hls.js
+                if (hls) {
+                    hls.destroy(); // Destrua a instância anterior do HLS
+                }
+                hls = new Hls();
+                hls.loadSource(src);
+                hls.attachMedia(player);
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    player.play();
+                });
+            } else if (player.canPlayType('application/vnd.apple.mpegurl')) {
+                // Navegadores com suporte nativo a HLS (Safari)
+                player.src = src;
+                player.play();
+            } else {
+                alert("Seu navegador não suporta a reprodução deste vídeo.");
+            }
+
             canalAtual = index;
         }
 
@@ -92,6 +112,9 @@
                 carregarCanal(index);
             });
         });
+
+        // Iniciar com o primeiro canal
+        carregarCanal(canalAtual);
     </script>
 </body>
 </html>
