@@ -4,16 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TV ao Vivo</title>
-    <link href="https://vjs.zencdn.net/7.15.4/video-js.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Seção 1: Header (Fixo) -->
+    <!-- Seção 1: Header -->
     <header>
         <h1>TV ao Vivo</h1>
     </header>
 
-    <!-- Seção 2: Menu de Categorias (Fixo) -->
+    <!-- Seção 2: Menu de Categorias -->
     <nav class="menu-categorias">
         <ul>
             <li><a href="#">Categoria 1</a></li>
@@ -22,88 +21,77 @@
         </ul>
     </nav>
 
-    <!-- Container Principal (Grade de Canais + Player) -->
-    <div class="main-container">
-        <!-- Grade de Canais (Coluna à Esquerda) -->
-        <section class="grade-canais">
-            <div class="canais-container">
-                <!-- Canais Originais -->
-                <div class="canal" data-src="https://cdn.live.br1.jmvstream.com/w/LVW-10801/LVW10801_Xvg4R0u57n/chunklist.m3u8">
-                    <img src="https://seeklogo.com/images/T/tv-cultura-logo-3D0057A0C9-seeklogo.com.png" alt="Canal 1">
-                    <p class="nome-canal">Canal 1</p>
-                </div>
-                <div class="canal" data-src="https://amazonsat.brasilstream.com.br/hls/amazonsat/index.m3u8">
-                    <img src="https://seeklogo.com/images/T/tv-cultura-logo-3D0057A0C9-seeklogo.com.png" alt="Canal 2">
-                    <p class="nome-canal">Canal 2</p>
-                </div>
-                <div class="canal" data-src="https://8hzcavccys.zoeweb.tv/redeminas/ngrp:redeminas_all/chunklist_b2179072.m3u8">
-                    <img src="https://seeklogo.com/images/T/tv-cultura-logo-3D0057A0C9-seeklogo.com.png" alt="Canal 3">
-                    <p class="nome-canal">Canal 3</p>
-                </div>
-                <div class="canal" data-src="https://video08.logicahost.com.br/istvnacional/srt.stream/chunklist_w745016844.m3u8">
-                    <img src="https://seeklogo.com/images/T/tv-cultura-logo-3D0057A0C9-seeklogo.com.png" alt="Canal 4">
-                    <p class="nome-canal">Canal 4</p>
-                </div>
-                <div class="canal" data-src="https://exemplo.com/canal5.m3u8">
-                    <img src="https://seeklogo.com/images/T/tv-cultura-logo-3D0057A0C9-seeklogo.com.png" alt="Canal 5">
-                    <p class="nome-canal">Canal 5</p>
-                </div>
-                <div class="canal" data-src="https://exemplo.com/canal6.m3u8">
-                    <img src="https://seeklogo.com/images/T/tv-cultura-logo-3D0057A0C9-seeklogo.com.png" alt="Canal 6">
-                    <p class="nome-canal">Canal 6</p>
-                </div>
+    <!-- Seção 3: Player de Vídeo -->
+    <section class="player-section">
+        <div class="player-wrapper">
+            <!-- Seta de navegação esquerda -->
+            <div class="nav-arrow left-arrow" onclick="trocarCanal(-1)">&#10094;</div>
 
-                <!-- Canais Duplicados -->
-                <div class="canal" data-src="https://cdn.live.br1.jmvstream.com/w/LVW-10801/LVW10801_Xvg4R0u57n/chunklist.m3u8">
-                    <img src="https://seeklogo.com/images/T/tv-cultura-logo-3D0057A0C9-seeklogo.com.png" alt="Canal 1">
-                    <p class="nome-canal">Canal 1</p>
-                </div>
-                <div class="canal" data-src="https://amazonsat.brasilstream.com.br/hls/amazonsat/index.m3u8">
-                    <img src="https://seeklogo.com/images/T/tv-cultura-logo-3D0057A0C9-seeklogo.com.png" alt="Canal 2">
-                    <p class="nome-canal">Canal 2</p>
-                </div>
-                <div class="canal" data-src="https://8hzcavccys.zoeweb.tv/redeminas/ngrp:redeminas_all/chunklist_b2179072.m3u8">
-                    <img src="https://seeklogo.com/images/T/tv-cultura-logo-3D0057A0C9-seeklogo.com.png" alt="Canal 3">
-                    <p class="nome-canal">Canal 3</p>
-                </div>
-                <div class="canal" data-src="https://video08.logicahost.com.br/istvnacional/srt.stream/chunklist_w745016844.m3u8">
-                    <img src="https://seeklogo.com/images/T/tv-cultura-logo-3D0057A0C9-seeklogo.com.png" alt="Canal 4">
-                    <p class="nome-canal">Canal 4</p>
-                </div>
-                <div class="canal" data-src="https://exemplo.com/canal5.m3u8">
-                    <img src="https://seeklogo.com/images/T/tv-cultura-logo-3D0057A0C9-seeklogo.com.png" alt="Canal 5">
-                    <p class="nome-canal">Canal 5</p>
-                </div>
-                <div class="canal" data-src="https://exemplo.com/canal6.m3u8">
-                    <img src="https://seeklogo.com/images/T/tv-cultura-logo-3D0057A0C9-seeklogo.com.png" alt="Canal 6">
-                    <p class="nome-canal">Canal 6</p>
-                </div>
-            </div>
-        </section>
+            <!-- Player de Vídeo Nativo -->
+            <video id="videoPlayer" controls width="800" height="450" muted autoplay>
+                <source src="" type="application/x-mpegURL">
+                Seu navegador não suporta a tag de vídeo.
+            </video>
 
-        <!-- Player de Vídeo (Coluna à Direita) -->
-        <section class="player-section">
-            <div class="player-wrapper">
-                <!-- Seta de navegação esquerda -->
-                <div class="nav-arrow left-arrow" onclick="trocarCanal(-1)">&#10094;</div>
+            <!-- Seta de navegação direita -->
+            <div class="nav-arrow right-arrow" onclick="trocarCanal(1)">&#10095;</div>
+        </div>
+    </section>
 
-                <!-- Player de Vídeo -->
-                <video id="videoPlayer" class="video-js vjs-default-skin" controls preload="auto" width="800" height="450" muted autoplay>
-                    <source src="" type="application/x-mpegURL">
-                </video>
-
-                <!-- Seta de navegação direita -->
-                <div class="nav-arrow right-arrow" onclick="trocarCanal(1)">&#10095;</div>
-            </div>
-        </section>
-    </div>
+    <!-- Seção 4: Grade de Canais -->
+    <section class="grade-canais">
+        <div class="canais-container" id="canais-container">
+            <!-- Canais serão carregados dinamicamente aqui -->
+        </div>
+    </section>
 
     <!-- Seção 5: Footer -->
     <footer>
         <p>&copy; 2023 TV ao Vivo. Todos os direitos reservados.</p>
     </footer>
 
-    <script src="https://vjs.zencdn.net/7.15.4/video.min.js"></script>
-    <script src="script.js"></script>
+    <script>
+        // Carregar canais do arquivo JSON
+        fetch('canais.json')
+            .then(response => response.json())
+            .then(canais => {
+                const container = document.getElementById('canais-container');
+                canais.forEach(canal => {
+                    const div = document.createElement('div');
+                    div.className = 'canal';
+                    div.setAttribute('data-src', canal.stream);
+                    div.innerHTML = `
+                        <img src="${canal.logo}" alt="${canal.nome}">
+                        <p class="nome-canal">${canal.nome}</p>
+                    `;
+                    container.appendChild(div);
+                });
+            });
+
+        // Lógica do player
+        const player = document.getElementById('videoPlayer');
+        let canalAtual = 0;
+
+        function carregarCanal(index) {
+            const canais = document.querySelectorAll('.canal');
+            if (index < 0) index = canais.length - 1;
+            if (index >= canais.length) index = 0;
+
+            const src = canais[index].getAttribute('data-src');
+            player.src = src;
+            player.play();
+            canalAtual = index;
+        }
+
+        window.trocarCanal = function(direcao) {
+            carregarCanal(canalAtual + direcao);
+        };
+
+        document.querySelectorAll('.canal').forEach((canal, index) => {
+            canal.addEventListener('click', () => {
+                carregarCanal(index);
+            });
+        });
+    </script>
 </body>
 </html>
