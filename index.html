@@ -1,184 +1,85 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Player de Vídeo com Carregamento de Lista M3U</title>
-    <!-- Inclua o CSS do Video.js -->
-    <link href="https://vjs.zencdn.net/7.20.3/video-js.css" rel="stylesheet" />
+    <title>IPTV Player com Video.js</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/video.js/8.5.3/video-js.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/video.js/8.5.3/video.min.js"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .input-container {
-            margin-top: 20px;
-        }
-        input[type="file"], input[type="url"] {
-            margin-bottom: 10px;
-            width: 300px;
-            padding: 8px;
-            font-size: 16px;
-        }
-        button {
-            padding: 8px 16px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        #url-list {
-            margin-top: 20px;
-        }
-        #url-list div {
-            margin-bottom: 10px;
-            padding: 5px;
-            background-color: #f0f0f0;
-            cursor: pointer;
-        }
-        #url-list div:hover {
-            background-color: #ddd;
-        }
+        body { font-family: Arial, sans-serif; text-align: center; }
+        #urlInput { width: 80%; padding: 10px; margin: 10px; }
+        #streamList { margin-top: 20px; list-style: none; padding: 0; }
+        #streamList li { cursor: pointer; color: blue; text-decoration: underline; margin: 5px 0; }
     </style>
 </head>
 <body>
-    <h1>Player de Vídeo com Carregamento de Lista M3U</h1>
 
-    <!-- Player de Vídeo -->
-    <video
-        id="my-video"
-        class="video-js vjs-default-skin"
-        controls
-        autoplay
-        muted
-        preload="auto"
-        width="640"
-        height="360"
-        data-setup="{}"
-    >
-        <source src="" type="application/x-mpegURL" />
-        <p class="vjs-no-js">
-            Para visualizar este vídeo, habilite o JavaScript ou considere atualizar para um navegador que suporte HTML5.
-        </p>
+    <h2>IPTV Player com Video.js</h2>
+
+    <!-- Player de vídeo -->
+    <video id="videoPlayer" class="video-js vjs-default-skin" controls width="640" height="360">
+        <source src="" type="application/x-mpegURL">
     </video>
 
-    <!-- Campo para carregar arquivo M3U -->
-    <div class="input-container">
-        <input type="file" id="m3u-file" accept=".m3u" />
-        <button onclick="processM3UFile()">Processar Arquivo M3U</button>
-    </div>
+    <br>
 
-    <!-- Campo para informar a URL do arquivo M3U -->
-    <div class="input-container">
-        <input type="url" id="m3u-url" placeholder="Informe a URL do arquivo M3U" />
-        <button onclick="processM3UFromURL()">Processar URL do M3U</button>
-    </div>
+    <!-- Campo para inserir a URL da lista M3U -->
+    <input type="text" id="urlInput" placeholder="Insira a URL do arquivo M3U">
+    <button onclick="loadM3U()">Carregar</button>
 
-    <!-- Lista de URLs extraídas -->
-    <div id="url-list">
-        <h3>URLs Extraídas:</h3>
-    </div>
+    <!-- Lista das URLs extraídas -->
+    <ul id="streamList"></ul>
 
-    <!-- Inclua o JavaScript do Video.js -->
-    <script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
     <script>
-        // Função para processar o arquivo M3U carregado
-        function processM3UFile() {
-            const fileInput = document.getElementById('m3u-file');
-            const file = fileInput.files[0];
+        var player = videojs('videoPlayer');
 
-            if (!file) {
-                alert("Por favor, selecione um arquivo M3U.");
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const content = e.target.result;
-                const urls = extractURLsFromM3U(content); // Extrai as URLs do conteúdo do arquivo
-                saveURLsToLocalStorage(urls); // Salva as URLs no localStorage
-                displayURLs(urls); // Exibe as URLs na página
-            };
-            reader.readAsText(file);
-        }
-
-        // Função para processar o arquivo M3U a partir de uma URL
-        function processM3UFromURL() {
-            const urlInput = document.getElementById('m3u-url');
-            const url = urlInput.value.trim();
-
+        async function loadM3U() {
+            let url = document.getElementById('urlInput').value;
             if (!url) {
-                alert("Por favor, informe a URL do arquivo M3U.");
+                alert("Por favor, insira uma URL válida.");
                 return;
             }
 
-            fetch(url)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error("Erro ao carregar o arquivo M3U.");
-                    }
-                    return response.text();
-                })
-                .then(content => {
-                    const urls = extractURLsFromM3U(content); // Extrai as URLs do conteúdo do arquivo
-                    saveURLsToLocalStorage(urls); // Salva as URLs no localStorage
-                    displayURLs(urls); // Exibe as URLs na página
-                })
-                .catch(error => {
-                    console.error("Erro:", error);
-                    alert("Erro ao carregar o arquivo M3U. Verifique a URL e tente novamente.");
-                });
-        }
+            try {
+                let response = await fetch(url);
+                let text = await response.text();
+                let streamUrls = extractM3UStreams(text);
 
-        // Função para extrair URLs de um arquivo M3U
-        function extractURLsFromM3U(content) {
-            const lines = content.split('\n');
-            const urls = [];
-
-            for (let line of lines) {
-                if (line.startsWith('http')) { // Verifica se a linha é uma URL
-                    urls.push(line.trim());
+                if (streamUrls.length > 0) {
+                    populateStreamList(streamUrls);
+                    player.src({ src: streamUrls[0], type: "application/x-mpegURL" });
+                    player.play();
+                } else {
+                    alert("Nenhuma stream encontrada no arquivo M3U.");
                 }
+            } catch (error) {
+                console.error("Erro ao carregar a lista M3U:", error);
+                alert("Erro ao carregar a lista. Verifique a URL.");
             }
-
-            return urls;
         }
 
-        // Função para salvar URLs no localStorage
-        function saveURLsToLocalStorage(urls) {
-            localStorage.setItem('savedURLs', JSON.stringify(urls));
+        function extractM3UStreams(m3uContent) {
+            let lines = m3uContent.split("\n");
+            let streams = lines.filter(line => line.trim().startsWith("http"));
+            return streams;
         }
 
-        // Função para carregar URLs do localStorage
-        function loadURLsFromLocalStorage() {
-            const savedURLs = localStorage.getItem('savedURLs');
-            return savedURLs ? JSON.parse(savedURLs) : [];
-        }
+        function populateStreamList(streamUrls) {
+            let streamList = document.getElementById('streamList');
+            streamList.innerHTML = "";
 
-        // Função para exibir as URLs na página
-        function displayURLs(urls) {
-            const urlList = document.getElementById('url-list');
-            urlList.innerHTML = '<h3>URLs Extraídas:</h3>';
-
-            urls.forEach((url, index) => {
-                const urlDiv = document.createElement('div');
-                urlDiv.textContent = url;
-                urlDiv.onclick = () => playURL(url); // Reproduz a URL ao clicar
-                urlList.appendChild(urlDiv);
+            streamUrls.forEach(url => {
+                let listItem = document.createElement("li");
+                listItem.textContent = url;
+                listItem.onclick = () => {
+                    player.src({ src: url, type: "application/x-mpegURL" });
+                    player.play();
+                };
+                streamList.appendChild(listItem);
             });
         }
-
-        // Função para reproduzir uma URL no player
-        function playURL(url) {
-            const player = videojs('my-video');
-            player.src({ type: 'application/x-mpegURL', src: url });
-            player.load();
-            player.play();
-        }
-
-        // Carrega as URLs salvas ao carregar a página
-        window.onload = function () {
-            const savedURLs = loadURLsFromLocalStorage();
-            displayURLs(savedURLs);
-        };
     </script>
+
 </body>
 </html>
