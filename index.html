@@ -14,16 +14,40 @@
             padding: 0;
         }
 
-        /* Player fixo no topo */
-        #playerContainer {
+        /* Container fixo para entrada e player */
+        #fixedContainer {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             background: black;
-            padding: 10px 0;
+            padding: 20px 0;
             z-index: 1000;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Campo de entrada acima do player */
+        #inputContainer {
+            margin-bottom: 20px;
+        }
+
+        #urlInput { 
+            width: 60%; 
+            padding: 10px; 
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        #loadButton {
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* Player fixo com espaçamento ajustado */
+        #playerContainer {
+            width: 100%;
+            min-height: 400px; /* Evita corte em telas pequenas */
         }
 
         #videoPlayer {
@@ -33,14 +57,8 @@
 
         /* Adiciona espaço para evitar sobreposição do player */
         #content {
-            margin-top: 250px;
+            margin-top: 500px;
             padding: 10px;
-        }
-
-        #urlInput { 
-            width: 80%; 
-            padding: 10px; 
-            margin: 10px; 
         }
 
         #streamList { 
@@ -66,20 +84,27 @@
 </head>
 <body>
 
-    <!-- Container fixo para o player -->
-    <div id="playerContainer">
-        <video id="videoPlayer" class="video-js vjs-default-skin" controls width="640" height="360">
-            <source src="" type="application/x-mpegURL">
-        </video>
+    <!-- Container fixo para o campo de URL e player -->
+    <div id="fixedContainer">
+        
+        <!-- Campo de entrada acima do player -->
+        <div id="inputContainer">
+            <input type="text" id="urlInput" placeholder="Insira a URL do arquivo M3U">
+            <button id="loadButton" onclick="loadM3U()">Carregar</button>
+        </div>
+
+        <!-- Player de vídeo fixo -->
+        <div id="playerContainer">
+            <video id="videoPlayer" class="video-js vjs-default-skin" controls width="640" height="360">
+                <source src="" type="application/x-mpegURL">
+            </video>
+        </div>
+
     </div>
 
     <!-- Conteúdo abaixo do player -->
     <div id="content">
         <h2>IPTV Player com Video.js</h2>
-
-        <input type="text" id="urlInput" placeholder="Insira a URL do arquivo M3U">
-        <button onclick="loadM3U()">Carregar</button>
-
         <ul id="streamList"></ul>
     </div>
 
