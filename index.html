@@ -14,8 +14,11 @@
         .input-container {
             margin-top: 20px;
         }
-        input[type="file"] {
+        input[type="file"], input[type="url"] {
             margin-bottom: 10px;
+            width: 300px;
+            padding: 8px;
+            font-size: 16px;
         }
         button {
             padding: 8px 16px;
@@ -63,6 +66,12 @@
         <button onclick="processM3UFile()">Processar Arquivo M3U</button>
     </div>
 
+    <!-- Campo para informar a URL do arquivo M3U -->
+    <div class="input-container">
+        <input type="url" id="m3u-url" placeholder="Informe a URL do arquivo M3U" />
+        <button onclick="processM3UFromURL()">Processar URL do M3U</button>
+    </div>
+
     <!-- Lista de URLs extraídas -->
     <div id="url-list">
         <h3>URLs Extraídas:</h3>
@@ -71,7 +80,7 @@
     <!-- Inclua o JavaScript do Video.js -->
     <script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
     <script>
-        // Função para processar o arquivo M3U
+        // Função para processar o arquivo M3U carregado
         function processM3UFile() {
             const fileInput = document.getElementById('m3u-file');
             const file = fileInput.files[0];
@@ -89,6 +98,34 @@
                 displayURLs(urls); // Exibe as URLs na página
             };
             reader.readAsText(file);
+        }
+
+        // Função para processar o arquivo M3U a partir de uma URL
+        function processM3UFromURL() {
+            const urlInput = document.getElementById('m3u-url');
+            const url = urlInput.value.trim();
+
+            if (!url) {
+                alert("Por favor, informe a URL do arquivo M3U.");
+                return;
+            }
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Erro ao carregar o arquivo M3U.");
+                    }
+                    return response.text();
+                })
+                .then(content => {
+                    const urls = extractURLsFromM3U(content); // Extrai as URLs do conteúdo do arquivo
+                    saveURLsToLocalStorage(urls); // Salva as URLs no localStorage
+                    displayURLs(urls); // Exibe as URLs na página
+                })
+                .catch(error => {
+                    console.error("Erro:", error);
+                    alert("Erro ao carregar o arquivo M3U. Verifique a URL e tente novamente.");
+                });
         }
 
         // Função para extrair URLs de um arquivo M3U
