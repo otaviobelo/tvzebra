@@ -110,10 +110,8 @@
                 return;
             }
 
-            // Adiciona um proxy CORS para evitar problemas de CORS
-            const proxyUrl = `https://cors-anywhere.herokuapp.com/${url}`;
-
-            fetch(proxyUrl)
+            // Usa a URL diretamente (sem proxy CORS)
+            fetch(url)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error("Erro ao carregar o arquivo M3U.");
@@ -181,10 +179,31 @@
             player.play();
         }
 
-        // Carrega as URLs salvas ao carregar a página
+        // Processa a URL pré-configurada ao carregar a página
         window.onload = function () {
             const savedURLs = loadURLsFromLocalStorage();
-            displayURLs(savedURLs);
+            if (savedURLs.length > 0) {
+                displayURLs(savedURLs);
+            } else {
+                // Processa a URL pré-configurada
+                const preconfiguredUrl = "https://raw.githubusercontent.com/helenfernanda/gratis/main/iptvlegal.m3u";
+                fetch(preconfiguredUrl)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Erro ao carregar o arquivo M3U.");
+                        }
+                        return response.text();
+                    })
+                    .then(content => {
+                        const urls = extractURLsFromM3U(content); // Extrai as URLs do conteúdo do arquivo
+                        saveURLsToLocalStorage(urls); // Salva as URLs no localStorage
+                        displayURLs(urls); // Exibe as URLs na página
+                    })
+                    .catch(error => {
+                        console.error("Erro:", error);
+                        alert("Erro ao carregar o arquivo M3U. Verifique a URL e tente novamente.");
+                    });
+            }
         };
     </script>
 </body>
