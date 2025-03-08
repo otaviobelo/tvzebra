@@ -3,118 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TV ao Vivo</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Player de Vídeo com Carregamento de Lista M3U</title>
+    <!-- Inclua o CSS do Video.js -->
+    <link href="https://vjs.zencdn.net/7.20.3/video-js.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .input-container {
+            margin-top: 20px;
+        }
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 8px 16px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #url-list {
+            margin-top: 20px;
+        }
+        #url-list div {
+            margin-bottom: 10px;
+            padding: 5px;
+            background-color: #f0f0f0;
+            cursor: pointer;
+        }
+        #url-list div:hover {
+            background-color: #ddd;
+        }
+    </style>
 </head>
 <body>
-    <!-- Seção 1: Header -->
-    <header>
-        <h1>TV ao Vivo</h1>
-    </header>
+    <h1>Player de Vídeo com Carregamento de Lista M3U</h1>
 
-    <!-- Seção 2: Menu de Categorias -->
-    <nav class="menu-categorias">
-        <ul>
-            <li><a href="#">Categoria 1</a></li>
-            <li><a href="#">Categoria 2</a></li>
-            <li><a href="#">Categoria 3</a></li>
-        </ul>
-    </nav>
+    <!-- Player de Vídeo -->
+    <video
+        id="my-video"
+        class="video-js vjs-default-skin"
+        controls
+        autoplay
+        muted
+        preload="auto"
+        width="640"
+        height="360"
+        data-setup="{}"
+    >
+        <source src="" type="application/x-mpegURL" />
+        <p class="vjs-no-js">
+            Para visualizar este vídeo, habilite o JavaScript ou considere atualizar para um navegador que suporte HTML5.
+        </p>
+    </video>
 
-    <!-- Seção 3: Player de Vídeo -->
-    <section class="player-section">
-        <div class="player-wrapper">
-            <!-- Seta de navegação esquerda -->
-            <div class="nav-arrow left-arrow" onclick="trocarCanal(-1)">&#10094;</div>
+    <!-- Campo para carregar arquivo M3U -->
+    <div class="input-container">
+        <input type="file" id="m3u-file" accept=".m3u" />
+        <button onclick="processM3UFile()">Processar Arquivo M3U</button>
+    </div>
 
-            <!-- Player de Vídeo -->
-            <video id="videoPlayer" controls width="800" height="450" muted autoplay>
-                Seu navegador não suporta a tag de vídeo.
-            </video>
+    <!-- Lista de URLs extraídas -->
+    <div id="url-list">
+        <h3>URLs Extraídas:</h3>
+    </div>
 
-            <!-- Seta de navegação direita -->
-            <div class="nav-arrow right-arrow" onclick="trocarCanal(1)">&#10095;</div>
-        </div>
-    </section>
-
-    <!-- Seção 4: Grade de Canais -->
-    <section class="grade-canais">
-        <div class="canais-container" id="canais-container">
-            <!-- Canais serão carregados dinamicamente aqui -->
-        </div>
-    </section>
-
-    <!-- Seção 5: Footer -->
-    <footer>
-        <p>&copy; 2023 TV ao Vivo. Todos os direitos reservados.</p>
-    </footer>
-
-    <!-- Inclua a biblioteca hls.js -->
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <!-- Inclua o JavaScript do Video.js -->
+    <script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
     <script>
-        // Carregar canais do arquivo JSON
-        fetch('canais.json')
-            .then(response => response.json())
-            .then(canais => {
-                const container = document.getElementById('canais-container');
-                canais.forEach(canal => {
-                    const div = document.createElement('div');
-                    div.className = 'canal';
-                    div.setAttribute('data-src', canal.stream);
-                    div.innerHTML = `
-                        <img src="${canal.logo}" alt="${canal.nome}">
-                        <p class="nome-canal">${canal.nome}</p>
-                    `;
-                    container.appendChild(div);
-                });
-            });
+        // Função para processar o arquivo M3U
+        function processM3UFile() {
+            const fileInput = document.getElementById('m3u-file');
+            const file = fileInput.files[0];
 
-        // Lógica do player com suporte a HLS
-        const player = document.getElementById('videoPlayer');
-        let hls; // Variável para instância do HLS
-        let canalAtual = 0;
-
-        function carregarCanal(index) {
-            const canais = document.querySelectorAll('.canal');
-            if (index < 0) index = canais.length - 1;
-            if (index >= canais.length) index = 0;
-
-            const src = canais[index].getAttribute('data-src');
-
-            if (Hls.isSupported()) {
-                // Se o navegador suportar HLS, use hls.js
-                if (hls) {
-                    hls.destroy(); // Destrua a instância anterior do HLS
-                }
-                hls = new Hls();
-                hls.loadSource(src);
-                hls.attachMedia(player);
-                hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                    player.play();
-                });
-            } else if (player.canPlayType('application/vnd.apple.mpegurl')) {
-                // Navegadores com suporte nativo a HLS (Safari)
-                player.src = src;
-                player.play();
-            } else {
-                alert("Seu navegador não suporta a reprodução deste vídeo.");
+            if (!file) {
+                alert("Por favor, selecione um arquivo M3U.");
+                return;
             }
 
-            canalAtual = index;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const content = e.target.result;
+                const urls = extractURLsFromM3U(content); // Extrai as URLs do conteúdo do arquivo
+                saveURLsToLocalStorage(urls); // Salva as URLs no localStorage
+                displayURLs(urls); // Exibe as URLs na página
+            };
+            reader.readAsText(file);
         }
 
-        window.trocarCanal = function(direcao) {
-            carregarCanal(canalAtual + direcao);
-        };
+        // Função para extrair URLs de um arquivo M3U
+        function extractURLsFromM3U(content) {
+            const lines = content.split('\n');
+            const urls = [];
 
-        document.querySelectorAll('.canal').forEach((canal, index) => {
-            canal.addEventListener('click', () => {
-                carregarCanal(index);
+            for (let line of lines) {
+                if (line.startsWith('http')) { // Verifica se a linha é uma URL
+                    urls.push(line.trim());
+                }
+            }
+
+            return urls;
+        }
+
+        // Função para salvar URLs no localStorage
+        function saveURLsToLocalStorage(urls) {
+            localStorage.setItem('savedURLs', JSON.stringify(urls));
+        }
+
+        // Função para carregar URLs do localStorage
+        function loadURLsFromLocalStorage() {
+            const savedURLs = localStorage.getItem('savedURLs');
+            return savedURLs ? JSON.parse(savedURLs) : [];
+        }
+
+        // Função para exibir as URLs na página
+        function displayURLs(urls) {
+            const urlList = document.getElementById('url-list');
+            urlList.innerHTML = '<h3>URLs Extraídas:</h3>';
+
+            urls.forEach((url, index) => {
+                const urlDiv = document.createElement('div');
+                urlDiv.textContent = url;
+                urlDiv.onclick = () => playURL(url); // Reproduz a URL ao clicar
+                urlList.appendChild(urlDiv);
             });
-        });
+        }
 
-        // Iniciar com o primeiro canal
-        carregarCanal(canalAtual);
+        // Função para reproduzir uma URL no player
+        function playURL(url) {
+            const player = videojs('my-video');
+            player.src({ type: 'application/x-mpegURL', src: url });
+            player.load();
+            player.play();
+        }
+
+        // Carrega as URLs salvas ao carregar a página
+        window.onload = function () {
+            const savedURLs = loadURLsFromLocalStorage();
+            displayURLs(savedURLs);
+        };
     </script>
 </body>
 </html>
