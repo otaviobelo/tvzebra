@@ -1,0 +1,13 @@
+#EXTM3U
+#EXTINF:-1 tvg-id="US: A&E EAST" tvg-name="USA A&E UHD" tvg-logo="https://images-na.ssl-images-amazon.com/images/I/312LhQsVqtL._SY355_.png" group-title="ENTERTAINMENT",USA A&E UHD
+https://player-tvcultura.stream.uol.com.br/live/tvcultura_lsd.m3u8
+#EXTINF:-1 tvg-id="ABC MIAMI FL WPLG" tvg-name="USA ABC WPLG UHD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/ABC_%282013%29_Dark_Grey.svg/1200px-ABC_%282013%29_Dark_Grey.svg.png" group-title="ENTERTAINMENT",USA ABC WPLG UHD
+http://supersonictv.live:8080/945213/876115/22041
+#EXTINF:-1 tvg-id="US: AMC EAST" tvg-name="USA AMC UHD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/AMC_logo_2016.svg/1280px-AMC_logo_2016.svg.png" group-title="ENTERTAINMENT",USA AMC UHD
+http://supersonictv.live:8080/945213/876115/22042
+#EXTINF:-1 tvg-id="CA: ADULT SWIM" tvg-name="USA: ADULT SWIM" tvg-logo="https://i.pinimg.com/originals/5c/31/62/5c31623f9319817ffba4715c50971444.jpg" group-title="ENTERTAINMENT",USA: ADULT SWIM
+http://supersonictv.live:8080/945213/876115/22043
+#EXTINF:-1 tvg-id="US: AMERICAN HEROES CHANNEL" tvg-name="USA American Heroes" tvg-logo="http://apk.eternaltv.net/icons/americanhero.jpg" group-title="ENTERTAINMENT",USA American Heroes
+http://supersonictv.live:8080/945213/876115/22044
+#EXTINF:-1 tvg-id="US: ANIMAL PLANET EAST" tvg-name="USA Animal Planet East UHD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/c/c8/AnimalPlanet.png" group-title="ENTERTAINMENT",USA Animal Planet East UHD
+http://supersonictv.live:8080/945213/876115/22045
