@@ -110,7 +110,10 @@
                 return;
             }
 
-            fetch(url)
+            // Adiciona um proxy CORS para evitar problemas de CORS
+            const proxyUrl = `https://cors-anywhere.herokuapp.com/${url}`;
+
+            fetch(proxyUrl)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error("Erro ao carregar o arquivo M3U.");
@@ -134,8 +137,12 @@
             const urls = [];
 
             for (let line of lines) {
-                if (line.startsWith('http')) { // Verifica se a linha é uma URL
-                    urls.push(line.trim());
+                // Remove espaços em branco no início e no fim da linha
+                line = line.trim();
+
+                // Verifica se a linha é uma URL válida
+                if (line.startsWith('http')) {
+                    urls.push(line);
                 }
             }
 
