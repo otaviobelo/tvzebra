@@ -21,14 +21,15 @@
             left: 0;
             width: 100%;
             background: black;
-            padding: 20px 0;
+            padding: 0;
             z-index: 1000;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
         }
 
         /* Campo de entrada acima do player */
         #inputContainer {
-            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
         }
 
         #urlInput { 
@@ -44,9 +45,18 @@
             cursor: pointer;
         }
 
-        /* Player fixo com espaçamento ajustado */
+        /* Tarja vermelha separando o input do player */
+        #separator {
+            background: red;
+            height: 40px;
+            width: 100%;
+        }
+
+        /* Player fixo logo abaixo da tarja */
         #playerContainer {
             width: 100%;
+            background: black;
+            padding: 10px 0;
             min-height: 400px; /* Evita corte em telas pequenas */
         }
 
@@ -57,7 +67,7 @@
 
         /* Adiciona espaço para evitar sobreposição do player */
         #content {
-            margin-top: 500px;
+            margin-top: 550px; /* Ajustado para evitar sobreposição */
             padding: 10px;
         }
 
@@ -87,13 +97,16 @@
     <!-- Container fixo para o campo de URL e player -->
     <div id="fixedContainer">
         
-        <!-- Campo de entrada acima do player -->
+        <!-- Campo de entrada -->
         <div id="inputContainer">
             <input type="text" id="urlInput" placeholder="Insira a URL do arquivo M3U">
             <button id="loadButton" onclick="loadM3U()">Carregar</button>
         </div>
 
-        <!-- Player de vídeo fixo -->
+        <!-- Tarja vermelha de separação -->
+        <div id="separator"></div>
+
+        <!-- Player fixo -->
         <div id="playerContainer">
             <video id="videoPlayer" class="video-js vjs-default-skin" controls width="640" height="360">
                 <source src="" type="application/x-mpegURL">
