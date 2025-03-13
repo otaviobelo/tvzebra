@@ -201,7 +201,7 @@
             // Função para carregar os canais
             async function loadChannels() {
                 try {
-                    const response = await fetch("https://raw.githubusercontent.com/iptv-org/iptv/refs/heads/master/streams/ae.m3u");
+                    const response = await fetch("https://raw.githubusercontent.com/otaviobelo/lista99/refs/heads/main/pacote-02.m3u");
                     const text = await response.text();
                     const lines = text.split("\n");
                     
