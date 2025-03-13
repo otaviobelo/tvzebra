@@ -104,6 +104,41 @@
             color: black; /* Texto preto para contraste */
             font-weight: bold;
         }
+
+        /* Estilos para dispositivos móveis */
+        @media (max-width: 768px) {
+            .map-player-container {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                width: 100%;
+                height: auto;
+                aspect-ratio: 16/9;
+                border-radius: 0;
+                z-index: 1000;
+                padding: 0;
+            }
+
+            #map {
+                margin-top: calc(56.25vw); /* Altura do player (16:9) */
+                height: calc(100vh - 56.25vw - 120px); /* Ajuste para o rodapé */
+            }
+
+            .channel-logos-container {
+                bottom: 0;
+                height: 80px; /* Reduzir altura do rodapé em mobile */
+            }
+
+            .channel-logo-thumbnail img {
+                width: 40px;
+                height: 40px;
+            }
+
+            .channel-logo-thumbnail .channel-name {
+                font-size: 10px;
+            }
+        }
     </style>
 </head>
 <body>
