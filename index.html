@@ -285,43 +285,47 @@
                 }
             }
             
-            // Função para carregar um canal específico
-            function loadChannel(streamUrl, channelName, logoUrl) {
-                mapPlayer.pause();
-                mapYoutubePlayer.innerHTML = "";
-                mapPlayerContainer.style.display = "block";
-                
-                // Atualizar título do player com o nome do canal
-                const playerTitle = document.createElement('div');
-                playerTitle.className = 'player-title';
-                playerTitle.style.position = 'absolute';
-                playerTitle.style.top = '5px';
-                playerTitle.style.left = '10px';
-                playerTitle.style.color = 'white';
-                playerTitle.style.zIndex = '2000';
-                playerTitle.style.fontSize = '14px';
-                playerTitle.style.fontWeight = 'bold';
-                playerTitle.style.textShadow = '1px 1px 2px black';
-                playerTitle.innerHTML = `
-                    <img src="${logoUrl}" onerror="this.src='logo.png'; this.onerror=null;" 
-                         style="height: 24px; vertical-align: middle; margin-right: 5px;">
-                    ${channelName}
-                `;
-                
-                // Remover título anterior se existir
-                const oldTitle = document.querySelector('.player-title');
-                if (oldTitle) {
-                    oldTitle.remove();
-                }
-                
-                mapPlayerContainer.appendChild(playerTitle);
-                
-                if (streamUrl.includes("youtube.com") || streamUrl.includes("youtu.be")) {
-                    loadYoutubeVideo(streamUrl, channelName);
-                } else {
-                    loadM3UStream(streamUrl);
-                }
-            }
+       // Função para carregar um canal específico
+function loadChannel(streamUrl, channelName, logoUrl) {
+    mapPlayer.pause();
+    mapYoutubePlayer.innerHTML = "";
+    mapPlayerContainer.style.display = "block";
+    
+    // Ocultar o banner do Globoplay por padrão
+    const banner = document.getElementById("globoplayBanner");
+    banner.style.display = "none"; // Ocultar o banner ao trocar de canal
+
+    // Atualizar título do player com o nome do canal
+    const playerTitle = document.createElement('div');
+    playerTitle.className = 'player-title';
+    playerTitle.style.position = 'absolute';
+    playerTitle.style.top = '5px';
+    playerTitle.style.left = '10px';
+    playerTitle.style.color = 'white';
+    playerTitle.style.zIndex = '2000';
+    playerTitle.style.fontSize = '14px';
+    playerTitle.style.fontWeight = 'bold';
+    playerTitle.style.textShadow = '1px 1px 2px black';
+    playerTitle.innerHTML = `
+        <img src="${logoUrl}" onerror="this.src='logo.png'; this.onerror=null;" 
+             style="height: 24px; vertical-align: middle; margin-right: 5px;">
+        ${channelName}
+    `;
+    
+    // Remover título anterior se existir
+    const oldTitle = document.querySelector('.player-title');
+    if (oldTitle) {
+        oldTitle.remove();
+    }
+    
+    mapPlayerContainer.appendChild(playerTitle);
+    
+    if (streamUrl.includes("youtube.com") || streamUrl.includes("youtu.be")) {
+        loadYoutubeVideo(streamUrl, channelName);
+    } else {
+        loadM3UStream(streamUrl);
+    }
+}
             
             // Função para carregar stream M3U
             function loadM3UStream(streamUrl) {
