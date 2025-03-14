@@ -327,8 +327,7 @@
                 mapYoutubePlayer.innerHTML = `<iframe src="https://www.youtube.com/embed/${extractYoutubeId(streamUrl)}?autoplay=1&mute=0&controls=1&enablejsapi=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
             }
             
-            // Função para extrair o ID do YouTube
-            function extractYoutubeId(url) {
+           function extractYoutubeId(url) {
             let videoId = "";
             let playlistId = "";
 
@@ -355,7 +354,7 @@
             let embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&controls=1&enablejsapi=1`;
             
             if (playlistId) {
-                embedUrl += `&list=${playlistId}`;
+                embedUrl += `&list=${playlistId}&loop=1&playlist=${playlistId}`;
             }
 
             document.getElementById("mapYoutubePlayer").innerHTML = `<iframe src="${embedUrl}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
