@@ -139,6 +139,26 @@
                 font-size: 10px;
             }
         }
+
+        /* Estilizando o banner do Globoplay */
+        #globoplayBanner {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: red;
+            color: white;
+            font-weight: bold;
+            padding: 10px;
+            font-size: 14px;
+            text-align: center;
+            border-radius: 5px;
+            z-index: 2000;
+            display: none; /* Escondido por padrão */
+        }
+        #globoplayBanner a {
+            color: white;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -152,6 +172,9 @@
     </div>
     <div id="channelLogosContainer" class="channel-logos-container"></div>
     <div id="channelLogo" class="channel-logo"></div>
+    <div id="globoplayBanner">
+        <a href="https://globoplay.globo.com/tv-globo/ao-vivo/6120663/" target="_blank">ASSISTA A GLOBO NO GLOBOPLAY</a>
+    </div>
 
     <!-- Carregando scripts de CDNs confiáveis e garantindo a ordem correta -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/video.js/8.3.0/video.min.js"></script>
@@ -294,7 +317,7 @@
                 mapPlayerContainer.appendChild(playerTitle);
                 
                 if (streamUrl.includes("youtube.com") || streamUrl.includes("youtu.be")) {
-                    loadYoutubeVideo(streamUrl);
+                    loadYoutubeVideo(streamUrl, channelName);
                 } else {
                     loadM3UStream(streamUrl);
                 }
@@ -319,46 +342,46 @@
             }
             
             // Função para carregar vídeo do YouTube
-            function loadYoutubeVideo(streamUrl) {
+            function loadYoutubeVideo(streamUrl, channelName) {
                 document.getElementById("mapPlayer").style.display = "none";
-                mapYoutubePlayer.style.display = "block";
+                document.getElementById("mapYoutubePlayer").style.display = "block";
+                let banner = document.getElementById("globoplayBanner");
                 
-                // Definir mute=0 para garantir que o YouTube inicie com áudio
-                mapYoutubePlayer.innerHTML = `<iframe src="https://www.youtube.com/embed/${extractYoutubeId(streamUrl)}?autoplay=1&mute=0&controls=1&enablejsapi=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+                let { videoId, playlistId } = extractYoutubeId(streamUrl);
+                let embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&controls=1&enablejsapi=1`;
+                
+                if (playlistId) {
+                    embedUrl += `&list=${playlistId}&loop=1&playlist=${playlistId}`;
+                }
+
+                document.getElementById("mapYoutubePlayer").innerHTML = `<iframe src="${embedUrl}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+                
+                // Exibe o banner apenas para o canal Globo
+                if (channelName.toUpperCase() === "GLOBO") {
+                    banner.style.display = "block";
+                } else {
+                    banner.style.display = "none";
+                }
             }
             
-           function extractYoutubeId(url) {
-            let videoId = "";
-            let playlistId = "";
+            function extractYoutubeId(url) {
+                let videoId = "";
+                let playlistId = "";
 
-            // Verifica se a URL contém um vídeo específico
-            let videoMatch = url.match(/[?&]v=([^&#]+)/) || url.match(/youtu\.be\/(.+?)([?&]|$)/);
-            if (videoMatch) {
-                videoId = videoMatch[1];
+                // Verifica se a URL contém um vídeo específico
+                let videoMatch = url.match(/[?&]v=([^&#]+)/) || url.match(/youtu\.be\/(.+?)([?&]|$)/);
+                if (videoMatch) {
+                    videoId = videoMatch[1];
+                }
+
+                // Verifica se há uma playlist na URL
+                let playlistMatch = url.match(/[?&]list=([^&#]+)/);
+                if (playlistMatch) {
+                    playlistId = playlistMatch[1];
+                }
+
+                return { videoId, playlistId };
             }
-
-            // Verifica se há uma playlist na URL
-            let playlistMatch = url.match(/[?&]list=([^&#]+)/);
-            if (playlistMatch) {
-                playlistId = playlistMatch[1];
-            }
-
-            return { videoId, playlistId };
-        }
-
-        function loadYoutubeVideo(streamUrl) {
-            document.getElementById("mapPlayer").style.display = "none";
-            document.getElementById("mapYoutubePlayer").style.display = "block";
-            
-            let { videoId, playlistId } = extractYoutubeId(streamUrl);
-            let embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&controls=1&enablejsapi=1`;
-            
-            if (playlistId) {
-                embedUrl += `&list=${playlistId}&loop=1&playlist=${playlistId}`;
-            }
-
-            document.getElementById("mapYoutubePlayer").innerHTML = `<iframe src="${embedUrl}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-        }
             
             // Função para trocar de canal
             function changeChannel(direction) {
